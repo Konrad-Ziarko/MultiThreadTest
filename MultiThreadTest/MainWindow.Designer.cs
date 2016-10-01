@@ -82,6 +82,7 @@
             this.button4.TabIndex = 3;
             this.button4.Text = "Start";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // progressBar1
             // 
@@ -110,6 +111,7 @@
             this.button6.TabIndex = 6;
             this.button6.Text = "Reset";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // progressBar2
             // 
@@ -136,6 +138,7 @@
             this.button9.TabIndex = 10;
             this.button9.Text = "Reset";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // button8
             // 
@@ -146,6 +149,7 @@
             this.button8.TabIndex = 9;
             this.button8.Text = "Stop";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button7
             // 
@@ -155,6 +159,7 @@
             this.button7.TabIndex = 8;
             this.button7.Text = "Start";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // MainWindow
             // 

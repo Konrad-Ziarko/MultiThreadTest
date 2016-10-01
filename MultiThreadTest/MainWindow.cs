@@ -101,6 +101,58 @@ namespace MultiThreadTest
                 }
             }
         }
-        
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (bw != null)
+            {
+                bw.RunWorkerAsync(new MethodInvoker(AddProgress2));
+            }
+            else
+            {
+                bw = new BackgroundWorker();
+                bw.WorkerReportsProgress = true;
+                bw.WorkerSupportsCancellation = true;
+                bw.DoWork += (s, eArgs) => ((MethodInvoker)eArgs.Argument).Invoke();
+                bw.ProgressChanged += (s, eArgs) =>
+                {
+                    progressBar2.Style = ProgressBarStyle.Continuous;
+                    progressBar2.Value = eArgs.ProgressPercentage;
+                };
+                bw.RunWorkerCompleted += (s, eArgs) =>
+                {
+                    if (progressBar2.Style == ProgressBarStyle.Marquee)
+                    {
+                        progressBar2.Visible = false;
+                    }
+                };
+                bw.RunWorkerAsync(new MethodInvoker(AddProgress2));
+            }
+            button4.Enabled = false;
+            button6.Enabled = true;
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            bw.CancelAsync();
+            button4.Enabled = true;
+            button6.Enabled = false;
+            progressBar2.Value = progressBar2.Minimum;
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
