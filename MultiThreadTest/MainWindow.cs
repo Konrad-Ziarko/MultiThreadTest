@@ -15,7 +15,7 @@ namespace MultiThreadTest
     {
         Thread thread;
         BackgroundWorker bw;
-
+        Progress<int> progress;
         public MainWindow()
         {
             InitializeComponent();
@@ -23,7 +23,7 @@ namespace MultiThreadTest
 
         private void LongTask()
         {
-            for (int i = 0; i <= 100; i++)
+            for (int i = 1; i <= 100; i++)
             {
                 AddProgress(i);
                 Thread.Sleep(50);
@@ -90,7 +90,7 @@ namespace MultiThreadTest
 
         private void AddProgress2()
         {
-            for (int i = 0; i <= 100; i++)
+            for (int i = 1; i <= 100; i++)
             {
                 Thread.Sleep(50);
                 bw.ReportProgress(i);
@@ -140,19 +140,46 @@ namespace MultiThreadTest
             progressBar2.Value = progressBar2.Minimum;
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        
+        private async Task LongTask2(IProgress<int> progress)
         {
+            await Task.Run(() =>
+             {
+                 for (int i = 1; i <= 100; i++)
+                 {
+                     progress.Report(i);
+                     Thread.Sleep(50);
+                 }
+             });
+        }
 
+        private async void button7_Click(object sender, EventArgs e)
+        {
+            button7.Enabled = false;
+            button8.Enabled = true;
+            button9.Enabled = true;
+            progress = new Progress<int>(percent =>
+            {
+                progressBar3.Value = percent;
+            });
+            await LongTask2(progress);
+            
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-
+            //http://stackoverflow.com/questions/19613444/a-pattern-to-pause-resume-an-async-task/21712588#21712588
+            button7.Enabled = true;
+            button8.Enabled = false;
+            button9.Enabled = true;
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-
+            //
+            button7.Enabled = true;
+            button8.Enabled = true;
+            button9.Enabled = false;
         }
     }
 }
