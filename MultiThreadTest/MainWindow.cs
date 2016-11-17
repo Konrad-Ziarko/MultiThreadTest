@@ -22,9 +22,21 @@ namespace MultiThreadTest
                 isWorking = true;
             }
         }
+        private class MyProgress : Progress<int>{
+            public bool work { get; set; }
+            public MyProgress(Action<int> handler) : base(handler)
+            {
+                work = true;
+            }
+
+            internal void Report(int i)
+            {
+                base.OnReport(i);
+            }
+        }
         MyBackgroundWorker bw;
         private object _threadLock = new object();
-        Progress<int> progress;
+        MyProgress progress;
         public MainWindow()
         {
             InitializeComponent();
@@ -178,14 +190,16 @@ namespace MultiThreadTest
         }
 
 
-        private async Task LongTask2(IProgress<int> progress)
+        private async Task LongTask2(MyProgress progress)
         {
             await Task.Run(() =>
              {
-                 for (int i = 1; i <= 100; i++)
+                 for (int i = 1; i <= 100 && progress.work; i++)
                  {
                      progress.Report(i);
                      Thread.Sleep(50);
+                     //while (progress.wait)
+                         ;
                  }
              });
         }
@@ -196,10 +210,14 @@ namespace MultiThreadTest
             button8.Enabled = true;
             button9.Enabled = true;
             if (progress == null)
-            progress = new Progress<int>(percent =>
             {
-                progressBar3.Value = percent;
-            });
+                progress = new MyProgress(percent =>
+                {
+                    progressBar3.Value = percent;
+                });
+            }
+            else
+                ;
             await LongTask2(progress);
 
         }
@@ -214,10 +232,12 @@ namespace MultiThreadTest
 
         private void button9_Click(object sender, EventArgs e)
         {
-            
+            progress.work = false;
+            progress = null;
             button7.Enabled = true;
             button8.Enabled = true;
             button9.Enabled = false;
+            progressBar3.Value = progressBar3.Minimum;
         }
     }
 }
